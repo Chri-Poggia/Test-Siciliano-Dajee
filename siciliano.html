@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compito in Classe - Test Siciliano</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background-color: #f9f9f9; }
+        .question { margin-bottom: 15px; }
+        .result { font-weight: bold; margin-top: 20px; }
+        button { display: block; width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Compito in Classe - Test Siciliano</h2>
+        <p><strong>Nome:</strong> <input type="text" id="nome" placeholder="Inserisci il tuo nome"></p>
+        <div id="quiz"></div>
+        <button onclick="calcolaRisultato()">Consegna il Compito</button>
+        <div id="risultato" class="result"></div>
+    </div>
+
+    <script>
+        const domande = [
+            { domanda: "Come si dice 'bambino' in siciliano?", risposte: ["Bambinu", "Bambina", "Picciriddu", "Piccinu"], corretta: 2 },
+            { domanda: "In siciliano, la parola 'focaccia' si traduce come:", risposte: ["Scaccia", "Fucaccia", "Focaccia siciliana", "Ficazzà"], corretta: 0 },
+            { domanda: "Cosa significa 'babbiari' in siciliano?", risposte: ["Giocare", "Litigare", "Scherzare", "Mangiare"], corretta: 2 },
+            { domanda: "Qual è la parola siciliana per 'lavoro'?", risposte: ["Lavoru", "Travagghiu", "Faticu", "Spisu"], corretta: 1 },
+            { domanda: "Come si dice 'andare' in siciliano?", risposte: ["Viri", "Iri", "Jiri", "Vanniri"], corretta: 1 },
+            { domanda: "Traduci in siciliano: 'Ho mangiato una pizza deliziosa ieri sera.'", rispostaAperta: "Mangiaiu nu stiddiazzu i pizza aieri arsira" },
+            { domanda: "Traduci in siciliano: 'I bambini stanno giocando nel giardino.'", rispostaAperta: "I picciriddi iocunu no iardinu" },
+            { domanda: "Traduci in siciliano: 'Andiamo al bar vicino alla piazza.'", rispostaAperta: "Amuninni o bar vicinu a ciazza" },
+            { domanda: "Traduci in italiano: 'Cu Fu? e Cu è?'", rispostaAperta: "Chi è? e Chi è stato?" },
+            { domanda: "Traduci in italiano: 'N'amma annacare'", rispostaAperta: "Ci dobbiamo sbrigare" },
+            { domanda: "Come si dice 'lì' in siciliano?", risposte: ["Duco", "Lì", "Dduocu", "Liú"], corretta: 2 },
+            { domanda: "La forma corretta del verbo 'cadere' al passato in siciliano per la seconda persona singolare è", risposte: ["Cadesti", "Caristi", "Susisti", "Cadisti"], corretta: 1 },
+            { domanda: "Qual è la forma verbale corretta in siciliano per dire 'me ne sono andato'?", risposte: ["Mi nni vaiu", "Iu vaiu", "Iu", "Mi nn'iu"], corretta: 3 },
+            { domanda: "Come si dice 'fidanzato' in siciliano?", risposte: ["Picciuotto", "Beddu", "Zitu", "Giovane"], corretta: 2 },
+            { domanda: "Come si dice 'sto bene' in siciliano?", risposte: ["Staiu beni", "Staiu buonu", "Stari buonu", "Stari bene"], corretta: 1 },
+            { domanda: "Completa la frase: 'Megghiu sulu ca _______.'", rispostaAperta: "Malaccumpagnatu" },
+            { domanda: "Completa la frase: 'Iurnata rutta, _______ _____'", rispostaAperta: "Rumpiemmula tutta" },
+            { domanda: "Traduci in italiano: 'pioviggina'", rispostaAperta: "Sbrizzichia" },
+            { domanda: "Traduci in italiano: 'i tunisini manco lavano sotto la scala'", rispostaAperta: "I tunnazzi mancu lavanu sutta a scala" },
+            { domanda: "Traduci in italiano: 'tirimi n'vasuni'", rispostaAperta: "Dammi un bacio" }
+        ];
+
+        const quizDiv = document.getElementById("quiz");
+
+        domande.forEach((item, index) => {
+            const div = document.createElement("div");
+            div.classList.add("question");
+            div.innerHTML = `<p>${index + 1}) ${item.domanda}</p>`;
+
+            if (item.risposte) {
+                item.risposte.forEach((risposta, i) => {
+                    div.innerHTML += `<input type="radio" name="q${index}" value="${i}"> ${risposta}<br>`;
+                });
+            } else {
+                div.innerHTML += `<input type="text" id="q${index}" placeholder="Scrivi la tua risposta qui"><br>`;
+            }
+            quizDiv.appendChild(div);
+        });
+
+        function calcolaRisultato() {
+            let nome = document.getElementById("nome").value.trim();
+            if (!nome) {
+                alert("Inserisci il tuo nome prima di consegnare il compito!");
+                return;
+            }
+
+            let punteggio = 0;
+            domande.forEach((item, index) => {
+                if (item.risposte) {
+                    const rispostaSelezionata = document.querySelector(`input[name='q${index}']:checked`);
+                    if (rispostaSelezionata && parseInt(rispostaSelezionata.value) === item.corretta) {
+                        punteggio++;
+                    }
+                } else {
+                    const rispostaUtente = document.getElementById(`q${index}`).value.trim().toLowerCase();
+                    if (rispostaUtente === item.rispostaAperta.toLowerCase()) {
+                        punteggio++;
+                    }
+                }
+            });
+
+            let voto = (punteggio / domande.length) * 10;
+            document.getElementById("risultato").innerText = `${nome}, hai ottenuto ${punteggio} su ${domande.length}. Voto: ${voto.toFixed(1)}/10`;
+        }
+    </script>
+</body>
+</html>
